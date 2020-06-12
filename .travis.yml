@@ -1,0 +1,11 @@
+#docker requires super user permissions
+sudo: required
+services:
+  #tell travis we need a copy of docker
+  - docker
+
+before_install:
+  - docker build -t ab/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true ab/docker-react npm run test
