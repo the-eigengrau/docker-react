@@ -1,0 +1,31 @@
+#The run command that this replaces looks like this:
+#docker run -it -p 3000:3000 -v /app/node_modules -v $(pwd):/app 81e646bd55c4
+#docker run
+
+version: '3'
+services:
+  react-app:
+    #attach to standard in... on some process.. idk it just needs it, okay?
+    stdin_open: true
+    build:
+      #Set workdir as context
+      context: .
+      #Use Dockerfile.dev instead of Dockerfile
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      #Node_modules should only exist in the container and not on the local file system.
+      - /app/node_modules
+      #Map the current working directory to the app folder inside the container
+      - .:/app
+  tests:
+    #this test directory automatically re-runs upon any changes to the underlying files
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      #these dashes delineate a yaml array
+      - /app/node_modules
+      - .:/app
+    command: ["npm","run","test"]
