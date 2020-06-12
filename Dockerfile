@@ -17,6 +17,10 @@ RUN npm run build
 #Just saying FROM specifies the start of a second phase. Each block has one FROM statement.
 FROM nginx
 
+#This is useless in a dev environment BUT
+#elastic beanstalk will look for this expose instruction to find the port that gets mapped for incoming traffic 
+EXPOSE 80
+
 #copy something from a different phase
 COPY --from=builder /app/build:/usr/share/nginx/html
 
