@@ -9,3 +9,20 @@ before_install:
 
 script:
   - docker run -e CI=true ab/docker-react npm run test
+
+deploy:
+  #TravisCI comes preconfigured to work with certain providers
+  provider: elasticbeanstalk
+  #These three params can be found easily in AWS console
+  region: "us-east-2"
+  app: "docker-react"
+  env: "DockerReact-env"
+  #Travis will take all the files in your repo, zip them up into one file and copy them into an S3 bucket
+  #then travis will let EBS know hey, I just uploaded this zip file, use it to deploy our application
+  bucket_name: "elasticbeanstalk-us-east-2-463736198836"
+  bucket_path: "docker-react"
+  #Only deploy the app if the master branch gets some new code
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
